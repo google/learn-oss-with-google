@@ -1,8 +1,13 @@
-# Learn Kubernetes with Google
+# Learn OSS with Google
 
-Welcome! This repo serves as the home to snippets and examples from The
-[Learn Kubernetes with Google][lkwg] video series. A series of short vidoes
-from Google Experts going over a wide variety of Kubernetes topics.
+Welcome! This repo serves as the home to snippets and examples from the
+Learn Open Source with Google Video Series! A series of short videos from
+Google Experts going over a wide variety of topics.
+
+- [Kubernetes](./kubernetes) ([Playlist][lkwg])
+  - [Intro to Horizontal Pod Autoscaler (HPA)](./kubernetes/hpa-introduction)
+  - [HPA: Scaling by Resource](./kubernetes/hpa-scaling-by-resource)
+
 
 
 
