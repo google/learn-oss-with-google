@@ -1,0 +1,15 @@
+# Copyright 2021 Google LLC.
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 40

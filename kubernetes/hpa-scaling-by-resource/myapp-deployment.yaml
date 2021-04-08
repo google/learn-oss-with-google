@@ -1,0 +1,29 @@
+# Copyright 2021 Google LLC.
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: frontend
+        image: nginx:1.7.9
+        resources:
+          requests:
+            memory: "25Mi"
+            cpu: "100m"
+      - name: backend
+        image: php:7
+        resources:
+          requests:
+            memory: "25Mi"
+            cpu: "200m"
