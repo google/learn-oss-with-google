@@ -1,0 +1,97 @@
+apiVersion: networking.x-k8s.io/v1alpha1
+kind: GatewayClass
+metadata:
+  name: istio
+spec:
+  controller: istio.io/gateway-controller
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: infra
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: store
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-store
+  namespace: store
+spec:
+  selector:
+    app: store
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-store
+  namespace: store
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: store
+  template:
+    metadata:
+      labels:
+        app: store
+    spec:
+      containers:
+      - name: whereami
+        image: gcr.io/google-samples/whereami:v1.1.3
+        ports:
+          - containerPort: 8080
+        env:
+          - name: POD_NAMESPACE #The kubernetes Namespace where the Pod is running
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: inventory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-inventory
+  namespace: inventory
+spec:
+  selector:
+    app: inventory
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-inventory
+  namespace: inventory
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      containers:
+      - name: whereami
+        image: gcr.io/google-samples/whereami:v1.1.3
+        ports:
+          - containerPort: 8080
+        env:
+          - name: POD_NAMESPACE #The kubernetes Namespace where the Pod is running
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
