@@ -1,0 +1,19 @@
+kind: HTTPRoute
+apiVersion: networking.x-k8s.io/v1alpha1
+metadata:
+  name: acme-store
+  namespace: store
+  labels:
+    gateway: acme-external
+spec:
+  hostnames:
+  - acme.io
+  rules:
+  - matches:
+    - path:
+        value: /store
+    forwardTo:
+    - serviceName: acme-store
+      port: 8080
+  gateways:
+    allow: All
