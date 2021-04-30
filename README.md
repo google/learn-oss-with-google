@@ -7,6 +7,7 @@ Google Experts going over a wide variety of topics.
 - [Kubernetes](./kubernetes) ([Playlist][lkwg])
   - [Intro to Horizontal Pod Autoscaler (HPA)](./kubernetes/hpa-introduction)
   - [HPA: Scaling by Resource](./kubernetes/hpa-scaling-by-resource)
+  - [Gateway API: Key concepts](./kubernetes/gateway-concepts/)
 
 
 
