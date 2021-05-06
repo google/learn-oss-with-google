@@ -8,6 +8,7 @@ Google Experts going over a wide variety of topics.
   - [Intro to Horizontal Pod Autoscaler (HPA)](./kubernetes/hpa-introduction)
   - [HPA: Scaling by Resource](./kubernetes/hpa-scaling-by-resource)
   - [Gateway API: Key concepts](./kubernetes/gateway-concepts/)
+  - [Gateway API: HTTP Routing](.kubernetes/http-routing/)
 
 
 
