@@ -1,0 +1,23 @@
+kind: HTTPRoute
+apiVersion: networking.x-k8s.io/v1alpha1
+metadata:
+  name: foo-route
+  namespace: foo
+  labels:
+    gateway: internal-gw
+spec:
+  gateways:
+    allow: All
+  hostnames:
+  - "foo.com"
+  rules:
+  - matches:
+    - path:
+        type: Prefix
+        value: /v2
+    forwardTo:
+    - serviceName: foo-v2
+      port: 8080
+  - forwardTo:
+    - serviceName: foo-v1
+      port: 8080

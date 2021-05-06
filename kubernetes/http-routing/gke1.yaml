@@ -1,0 +1,123 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: foo
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: bar
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foo-v1
+  namespace: foo
+spec:
+  selector:
+    app: foo
+    version: v1
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foo-v1
+  namespace: foo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: foo
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: foo
+        version: v1
+    spec:
+      containers:
+      - name: whereami
+        image: gcr.io/google-samples/whereami:v1.1.3
+        ports:
+          - containerPort: 8080
+        env:
+        - name: METADATA
+          value: "foo-v1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foo-v2
+  namespace: foo
+spec:
+  selector:
+    app: foo
+    version: v2
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foo-v2
+  namespace: foo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: foo
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: foo
+        version: v2
+    spec:
+      containers:
+      - name: whereami
+        image: gcr.io/google-samples/whereami:v1.1.3
+        ports:
+          - containerPort: 8080
+        env:
+        - name: METADATA
+          value: "foo-v2"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bar
+  namespace: bar
+spec:
+  selector:
+    app: bar
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bar
+  namespace: bar
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+        app: bar
+  template:
+    metadata:
+      labels:
+        app: bar
+    spec:
+      containers:
+      - name: whereami
+        image: gcr.io/google-samples/whereami:v1.1.3
+        ports:
+          - containerPort: 8080
+        env:
+        - name: METADATA
+          value: "bar"
