@@ -1,0 +1,47 @@
+# Copyright 2023 Google LLC.
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: myjob
+spec:
+  parallelism: {{ hosts_count }}
+  completions: {{ hosts_count }}
+  completionMode: Indexed
+  template:
+    spec:
+      subdomain: mysvc
+      volumes:
+      - name: script-volume
+        configMap:
+          name: script
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: NoSchedule
+      containers:
+      - name: main
+        image: gcr.io/deeplearning-platform-release/tf-gpu.2-11
+        env:
+        - name: TF_FORCE_GPU_ALLOW_GROWTH
+          value: "true"
+        command: ["bash"]
+        args:
+        - -c
+        - |
+          pip install flax
+          pip install "jax[cuda]==0.3.25" "jaxlib==0.3.25+cuda11.cudnn82" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+          conda install -c "nvidia/label/cuda-11.3.1" cuda-nvcc
+          python /script-path/main.py $JOB_COMPLETION_INDEX {{ hosts_count }} "myjob-0.mysvc:8080"
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            nvidia.com/gpu: {{ local_device_count }}
+        volumeMounts:
+          - mountPath: /script-path
+            name: script-volume
+      restartPolicy: Never
+  backoffLimit: 0

@@ -1,0 +1,38 @@
+# Copyright 2023 Google LLC.
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: environments
+spec:
+  parallelism: 2
+  completions: 2
+  completionMode: Indexed
+  template:
+    metadata:
+      labels:
+        task: simulation
+    spec:
+      subdomain: mysvc
+      volumes:
+      - name: script-volume
+        configMap:
+          name: environment-script
+      containers:
+      - name: main
+        image: python:3.10.10-bullseye
+        command: ["bash"]
+        args:
+        - -c
+        - |
+          pip install numpy grpcio dm-env dm-env-rpc
+          python /script-path/catch_environment.py 12345
+        ports:
+        - containerPort: 12345
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /script-path
+            name: script-volume
+      restartPolicy: Never
+  backoffLimit: 0
