@@ -1,0 +1,41 @@
+# Copyright 2023 Google LLC.
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: myjob
+spec:
+  parallelism: 2
+  completions: 2
+  completionMode: Indexed
+  template:
+    spec:
+      subdomain: mysvc
+      volumes:
+      - name: script-volume
+        configMap:
+          name: script
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: NoSchedule
+      containers:
+      - name: main
+        image: gcr.io/deeplearning-platform-release/pytorch-gpu.1-12
+        command: ["bash"]
+        args:
+        - -c
+        - |
+          torchrun --node_rank $JOB_COMPLETION_INDEX --nnodes 2 --nproc_per_node 2 --master_addr myjob-0.mysvc --master_port 8080 /script-path/main.py
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            nvidia.com/gpu: 2
+        volumeMounts:
+          - mountPath: /script-path
+            name: script-volume
+      restartPolicy: Never
+  backoffLimit: 0
