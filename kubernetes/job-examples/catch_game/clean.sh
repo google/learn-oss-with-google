@@ -10,3 +10,5 @@ kubectl delete pods -l job-name=agents --ignore-not-found=true --force --grace-p
 kubectl wait --for=delete pod -l job-name=agents --timeout=60s
 
 kubectl delete -f service.yaml --ignore-not-found=true
+kubectl delete configmap environment-script
+kubectl delete configmap agent-script

@@ -11,15 +11,6 @@ trained version of the model isn't saved for downstream processing.
 
 ## Prepare
 
-### Docker image
-
-First, build and push the required docker images into your Docker repository.
-This can be done by running the following script:
-
-```sh
-./build_and_push.sh
-```
-
 ### Job YAML
 
 You can generate the Job YAML file by running the `prepare.sh` script which uses

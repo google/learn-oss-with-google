@@ -20,6 +20,6 @@ to perform various tasks. The examples focus on the Job-code integration, so
 some aspects of the code are simplified.
 
 Examples:
-- [Distributed ML training with JAX](./k8s_job/ml_training_jax/)
-- [Distributed ML training with PyTorch](./k8s_job/ml_training_pytorch/)
-- [Agent-environment simulations](./k8s_job/catch_game/)
+- [Distributed ML training with JAX](./kubernetes/job-examples/ml_training_jax/)
+- [Distributed ML training with PyTorch](./kubernetes/job-examples/ml_training_pytorch/)
+- [Agent-environment simulations](./kubernetes/job-examples/catch_game/)
