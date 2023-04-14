@@ -33,7 +33,7 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           limits:
-            nvidia.com/gpu: {{ local_device_count }}
+            nvidia.com/gpu: "{{ local_device_count }}"
         volumeMounts:
           - mountPath: /script-path
             name: script-volume

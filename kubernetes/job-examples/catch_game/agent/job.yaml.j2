@@ -26,8 +26,8 @@ spec:
         args:
         - -c
         - |
-          pip install numpy grpcio dm-env dm-env-rpc
-          python /script-path/catch_ai_agent.py environments-$JOB_COMPLETION_INDEX.mysvc:12345
+          pip install grpcio dm-env dm-env-rpc
+          python /script-path/catch_ai_agent.py environments-$JOB_COMPLETION_INDEX.mysvc:12345 0.1
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /script-path

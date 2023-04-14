@@ -14,6 +14,7 @@ from dm_env_rpc.v1 import dm_env_rpc_pb2
 import sys, time, logging
 import socket
 import grpc
+import random
 
 root = logging.getLogger()
 root.setLevel(logging.DEBUG)
@@ -71,6 +72,7 @@ def wait_until_env_server_responds(hostname, port):
 
 def main(_):
   server_with_port = sys.argv[1]
+  random_step_ratio = float(sys.argv[2])
   hostname, port = server_with_port.split(":")
   port = int(port)
   running = wait_until_env_server_responds(hostname, port)
@@ -91,13 +93,20 @@ def main(_):
       for iteration in range(100):
         logging.info(f"iteration: {iteration}")
         requested_action = _ACTION_NOTHING
-
         my_column = get_my_column(board)
-        ball_column = get_ball_column(board)
-        if my_column < ball_column:
-          requested_action = _ACTION_RIGHT
-        elif my_column > ball_column:
-          requested_action = _ACTION_LEFT
+
+        # make a random move with a parametrized probability
+        if random.random() < random_step_ratio:
+          if random.randint(0, 1) == 0:
+            requested_action = _ACTION_LEFT
+          else:
+            requested_action = _ACTION_RIGHT
+        else:
+          ball_column = get_ball_column(board)
+          if my_column < ball_column:
+            requested_action = _ACTION_RIGHT
+          elif my_column > ball_column:
+            requested_action = _ACTION_LEFT
 
         actions = {_ACTION_PADDLE: requested_action}
         timestep = env.step(actions)

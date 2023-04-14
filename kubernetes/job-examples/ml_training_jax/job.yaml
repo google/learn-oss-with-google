@@ -39,7 +39,7 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           limits:
-            nvidia.com/gpu: 2
+            nvidia.com/gpu: "2"
         volumeMounts:
           - mountPath: /script-path
             name: script-volume
