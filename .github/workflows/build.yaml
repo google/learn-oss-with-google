@@ -33,7 +33,7 @@ jobs:
           docker build -t local/devex:v1 .
       - name: Deploy to to Kubernetes 
         run: | 
-          kubectl apply -f minikiube/deploy/k8s.yaml 
+          kubectl apply -f minikube/deploy/k8s.yaml 
       - name: Verify Deployment
         run: | 
           minikube service list
