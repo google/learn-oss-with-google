@@ -29,7 +29,8 @@ jobs:
       - name: Build Docker images inside minikube
         run: | 
           eval $(minikube docker-env)
-          docker build -f ./minikube/Dockerfile -t local/devex:v1 .
+          cd minikube
+          docker build -t local/devex:v1 .
       - name: Deploy to to Kubernetes 
         run: | 
           kubectl apply -f minikiube/deploy/k8s.yaml 
