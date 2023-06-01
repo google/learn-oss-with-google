@@ -1,0 +1,43 @@
+name: build
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+  schedule:
+    # every day at 6am & 6pm pacific
+    - cron: "0 1,13 * * *"
+jobs:
+  build:
+    strategy:
+      matrix:
+          os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+      - uses: azure/setup-kubectl@901a10e89ea615cf61f57ac05cecdf23e7de06d8
+      - uses: medyagh/setup-minikube@latest
+      - name: install tools for mac os
+        if: matrix.os == 'macos-12'
+        shell: bash
+        run: |
+          brew install docker-machine docker
+          sudo docker --version
+          sysctl hw.physicalcpu hw.logicalcpu 
+          sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate off
+          sudo /usr/libexec/ApplicationFirewall/socketfilterfw -k
+
+      - name: Build Docker images inside minikube
+        run: | 
+          eval $(minikube docker-env)
+          cd minikube
+          docker build -t local/devex:v1 .
+      - name: Deploy to to Kubernetes 
+        run: | 
+          kubectl apply -f minikube/deploy/k8s.yaml 
+      - name: Verify Deployment
+        run: | 
+          minikube service list
+          minikube service local-devex-svc --url --wait=10
+          kubectl get pods -A
+          kubectl wait --for=condition=ready pod -l app=local-devex
+          curl -vvv $(minikube service local-devex-svc --url)
